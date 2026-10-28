@@ -1,0 +1,24 @@
+
+### 1. Todo funcionando: crear producto, cliente y pedido
+{"id":3,"nombre":"Gorra","precio":25000.0,"stock":10}
+{"id":3,"nombre":"Marta Ruiz","email":"marta@correo.com"}
+{"id":1,"cliente_id":1,"producto_id":1,"cantidad":2,"estado":"CONFIRMADO","detalle":"Pedido validado","producto_nombre":"Camiseta","total":70000.0}
+
+### 2. Validaciones: stock insuficiente y cliente inexistente
+{"id":2,"cliente_id":1,"producto_id":1,"cantidad":999,"estado":"RECHAZADO","detalle":"Stock insuficiente"}
+{"id":3,"cliente_id":99,"producto_id":1,"cantidad":1,"estado":"RECHAZADO","detalle":"Cliente no existe"}
+
+### 3. CAÍDA: se apaga el servicio de PRODUCTOS
+productos:
+ -> sin conexión (esperado)
+clientes (debe seguir):
+[{"id":1,"nombre":"Ana Pérez","email":"ana@correo.com"},{"id":2,"nombre":"Luis Gómez","email":"luis@correo.com"},{"id":3,"nombre":"Marta Ruiz","email":"marta@correo.com"}]
+pedidos - consultar (debe seguir):
+[{"id":1,"cliente_id":1,"producto_id":1,"cantidad":2,"estado":"CONFIRMADO","detalle":"Pedido validado","producto_nombre":"Camiseta","total":70000.0},{"id":2,"cliente_id":1,"producto_id":1,"cantidad":999,"estado":"RECHAZADO","detalle":"Stock insuficiente"},{"id":3,"cliente_id":99,"producto_id":1,"cantidad":1,"estado":"RECHAZADO","detalle":"Cliente no existe"}]
+pedidos - crear con productos caído (queda pendiente, no se pierde):
+{"id":4,"cliente_id":2,"producto_id":1,"cantidad":1,"estado":"PENDIENTE_VALIDACION","detalle":"Servicio 'productos' no disponible; se reintentará"}
+
+### 4. RECUPERACIÓN: se vuelve a levantar PRODUCTOS y se reintentan pendientes
+productos de nuevo:
+{"servicio":"productos","estado":"ok"}
+{"revisados":1,"pedidos":[{"id":4,"cliente_id":2,"producto_id":1,"cantidad":1,"estado":"CONFIRMADO","detalle":"Pedido validado","producto_nombre":"Camiseta","total":35000.0}]}
